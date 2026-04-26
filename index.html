@@ -659,9 +659,21 @@ Make it ATS-friendly, impactful, and tailored to the ${jobTitle} role. Use actio
     document.getElementById('generate-btn').disabled = on;
   }
 
+  function renderMarkdown(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^### (.+)$/gm, '<h3 style="margin:1em 0 0.3em;font-family:Playfair Display,serif;font-weight:500;font-size:15px;">$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2 style="margin:1.2em 0 0.3em;font-family:Playfair Display,serif;font-weight:500;font-size:17px;border-bottom:1px solid #e8e5df;padding-bottom:4px;">$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1 style="margin:0 0 0.5em;font-family:Playfair Display,serif;font-weight:600;font-size:22px;">$1</h1>')
+      .replace(/^- (.+)$/gm, '<li style="margin:3px 0;padding-left:4px;">$1</li>')
+      .replace(/(<li[^>]*>[\s\S]*?<\/li>)/g, '<ul style="padding-left:18px;margin:6px 0;">$1</ul>')
+      .replace(/\n\n/g, '<br>')
+      .replace(/\n/g, '<br>');
+  }
+
   function displayResume(text) {
     const out = document.getElementById('resume-output');
-    out.textContent = text;
+    out.innerHTML = renderMarkdown(text);
     out.style.display = 'block';
     document.getElementById('placeholder').style.display = 'none';
     document.getElementById('action-row').style.display = 'flex';
