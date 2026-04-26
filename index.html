@@ -442,8 +442,8 @@
   </div>
 
   <div class="api-key-section">
-    <p>&#9881; Paste your free Gemini API key below &nbsp;·&nbsp; <a href="https://aistudio.google.com/app/apikey" target="_blank">Get it free at aistudio.google.com</a></p>
-    <input type="password" id="api-key" placeholder="AIza..." />
+    <p>&#9881; Paste your free Groq API key below &nbsp;·&nbsp; <a href="https://console.groq.com/keys" target="_blank">Get it free at console.groq.com</a></p>
+    <input type="password" id="api-key" placeholder="gsk_..." />
   </div>
 
   <div class="layout">
@@ -611,11 +611,16 @@ Write a complete resume with:
 Make it ATS-friendly, impactful, and tailored to the ${jobTitle} role. Use action verbs. Keep it to 1 page worth of content.`;
 
     try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
+          model: 'llama-3.3-70b-versatile',
+          max_tokens: 1500,
+          messages: [{ role: 'user', content: prompt }]
         })
       });
 
@@ -625,7 +630,7 @@ Make it ATS-friendly, impactful, and tailored to the ${jobTitle} role. Use actio
       }
 
       const data = await res.json();
-      const text = data.candidates[0].content.parts[0].text;
+      const text = data.choices[0].message.content;
 
       showLoading(false);
       displayResume(text);
