@@ -543,6 +543,13 @@
 <script>
   let usesLeft = parseInt(localStorage.getItem('resumeai_uses') || '3');
   let isPro = localStorage.getItem('resumeai_pro') === 'true';
+  
+  // Auto-load saved API key
+  const savedKey = localStorage.getItem('resumeai_groq_key');
+  if (savedKey) document.getElementById('api-key').value = savedKey;
+  document.getElementById('api-key').addEventListener('input', function() {
+    if (this.value.length > 10) localStorage.setItem('resumeai_groq_key', this.value);
+  });
   let selectedTone = 'Professional';
 
   function updateUsageBadge() {
